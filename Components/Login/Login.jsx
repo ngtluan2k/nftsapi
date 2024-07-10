@@ -45,7 +45,12 @@ const Login = ({
       if (response.data.status == "success") {
         setNotification("You have successfully login");
         localStorage.setItem("NFTApi Token", response.data.token);
-        localStorage.setItem("NFTApi User", response.data.data.user.name);
+        const userData = {
+          email: response.data.data.user.email,
+          address: response.data.data.user.address,
+          name: response.data.data.user.name,
+        };
+        localStorage.setItem("NFTApi User", JSON.stringify(userData));
         setLogin(false);
         window.location.reload();
       } else {

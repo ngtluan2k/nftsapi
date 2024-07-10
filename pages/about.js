@@ -1,45 +1,67 @@
 import React, { useState, useEffect } from "react";
 
 // INTERNAL IMPORT
-import { Header, Footer, Notification, Comment, Loader, Card } from "../Components";
+import { Header, Footer, Notification, Filter, Loader, Card } from "../Components";
 import { useStateContext } from "../Context/NFTs";
 
 const about = () => {
     // STATE VARIABLE
-    const { loading, getNFTsByCreatorAPI, address } = useStateContext();
+    const { loading, getNFTsByCreator, address, contract, getNFTsByCreatorAPI} = useStateContext();
     const [notification, setNotification] = useState("");
-    const [nfts, setNfts] = useState([]);
+    const [allImages, setAllImages] = useState([]);
+    const [activeSelect, setActiveSelect] = useState("Old Images");
+    const [imagesCopy, setImagesCopy] = useState([]);
+    // GET DATA
+    const oldImages = [];
+    const fetchImages = async () => {
+        const images = await getNFTsByCreator(address);
+        setAllImages(images);
+
+        // API NFTs
+        const apiImages = await getNFTsByCreatorAPI();
+    };
 
     useEffect(() => {
-        const fetchNFTs = async () => {
-            if (address) {
-                // try {
-                    console.log("address:", address);
-                    const response = await getNFTsByCreatorAPI(address);
-                    console.log("Fetched NFTs:", response); // Log the response
-                    // setNfts(response.data.data);
-                // } catch (error) {
-                //     console.error("Error fetching NFTs:", error); // Log the error
-                //     setNotification("Failed to fetch NFTs");
-                // }
-            }
-        };
+        if (contract) fetchImages();
+    }, [address, contract]);
 
-        fetchNFTs();
-    }, [address, getNFTsByCreatorAPI]);
+    if (allImages.length == 0) {
+        console.log("Loading");
+    } else {
+        allImages.map((el) => oldImages.push(el));
+    }
 
     return (
         <div className="home">
             <Header notification={notification} setNotification={setNotification} />
-            {/* <Comment /> */}
-            {nfts.map((nft, i) => (
-                <Card
-                    key={i + 1}
-                    index={i}
-                    image={nft}
-                    setNotification={setNotification}
+            {/* CARD */}
+            {allImages.length == 0 ? (
+                <Loader />
+            ) : allImages == undefined ? (
+                <h1>No images</h1>
+            ) : (
+                <>
+                <Filter
+                    setImagesCopy={setImagesCopy}
+                    imagesCopy={imagesCopy}
+                    setAllImages={setAllImages}
+                    allImages={allImages}
+                    oldImages={oldImages}
+                    activeSelect={activeSelect}
+                    setActiveSelect={setActiveSelect}
                 />
-            ))}
+                <div className="card">
+                    {allImages.map((image, i) => (
+                    <Card
+                        key={i + 1}
+                        index={i}
+                        image={image}
+                        setNotification={setNotification}
+                    />
+                    ))}
+                </div>
+                </>
+            )}
             <Footer />
             {/* // NOTIDICATION */}
             {notification != "" && (

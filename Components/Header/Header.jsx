@@ -39,7 +39,7 @@ const Header = ({ notification, setNotification }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("NFTApi Token");
-    const user = localStorage.getItem("NFTApi User");
+    const user = JSON.parse(localStorage.getItem("NFTApi User"));
     setToken(token);
     setUser(user);
   }, []);
@@ -64,7 +64,9 @@ const Header = ({ notification, setNotification }) => {
           ))}
           {token ? (
             <div>
-              <p>Hello, {user}</p>
+              <a href="/profile">
+                <p>Hello, {user.name}</p>
+              </a>
               <p onClick={() => logout()}>Logout</p>
             </div>
           ) : (

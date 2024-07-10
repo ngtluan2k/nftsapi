@@ -3,9 +3,32 @@ body {
     color: #fff;
 }
 
+.content-profile {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+}
+.card-profile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 2rem;
+    flex: 1;
+    margin-right: 20px;
+}
+.info-profile {
+    flex: 0 0 300px;
+    color: white;
+    background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
 /* HOME PAGE */
 .home {
-    width: 70%;
+    width: 95%;
     margin: 0 auto;
     margin-block: 3rem;
 }
@@ -42,7 +65,7 @@ body {
 /* CARD */
 .card {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1rem;
     margin-top: 2rem;
 }

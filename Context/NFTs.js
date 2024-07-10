@@ -102,6 +102,33 @@ export const StateContextProvider = ({ children }) => {
         return allImages;
     };
 
+    // ---Get contract data
+    const getNFTsByCreator = async (address) => {
+        // All images
+        const images = await contract.call("getNFTsByCreator", [address]);
+
+        // Total upload
+        const totalUpload = await contract.call("imagesCount");
+        
+        // Listing price
+        const listingPrice = await contract.call("listingPrice");
+        const allImages = images.map((images, i) => ({
+            owner: images.creator,
+            title: images.title,
+            description: images.description,
+            email: images.email,
+            category: images.category,
+            fundraised: images.fundraised,
+            image: images.image,
+            imageID: images.id.toNumber(),
+            createdAt: images.timestamp.toNumber(),
+            listedAmount: ethers.utils.formatEther(listingPrice.toString()),
+            totalUpload: totalUpload.toNumber(),
+        }))
+
+        return allImages;
+    };
+
     //--- Get single image
     const singleImage = async (id) => {
         try {
@@ -181,6 +208,7 @@ export const StateContextProvider = ({ children }) => {
             getUploadedImages,
             donateFund,
             singleImage,
+            getNFTsByCreator,
             // API
             getAllNftsAPI,
             getNFTsByCreatorAPI,

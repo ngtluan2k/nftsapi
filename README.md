@@ -1,9 +1,16 @@
-#### NodeJs & NPM Version
+#### References
+https://www.youtube.com/watch?v=WLHA5CrYe7U
 
+#### NodeJs & NPM Version
 ```https://nodejs.org/en/download
   NodeJs: v18.12.1
   NPM: 8.19.2
 ```
+
+#### third part
+mongoDB
+pinata
+thirdweb3
 
 #### Clone Starter File
 
