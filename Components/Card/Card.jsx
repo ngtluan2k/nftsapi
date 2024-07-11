@@ -32,7 +32,7 @@ const Card = ({ setNotification, image, index }) => {
           <small
             className={Style.para_small}
             onClick={() => {
-              setNotification("Successfully copied"),
+              setNotification("Address contract is successfully copied"),
                 navigator.clipboard.writeText(image.owner)
             }}
           >

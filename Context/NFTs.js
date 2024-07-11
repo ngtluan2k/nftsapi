@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-    const { contract } = useContract("0x4347F77BCfa87d0734B2aa6e7B058446e021D465");
+    const { contract } = useContract("0x65da3e782DC5C4Ae4AC7BFD26F740BE8D41D264b");
     const address = useAddress();
     const connect = useMetamask();
 
@@ -24,7 +24,7 @@ export const StateContextProvider = ({ children }) => {
 
     const fetchData = async () => {
         try {
-            // User blance
+            // User balance
             const balance = await signer?.getBalance();
             const userBalance = address ? ethers.utils.formatEther(balance?.toString()) : "";
             setUserBlance(userBalance);
@@ -52,7 +52,7 @@ export const StateContextProvider = ({ children }) => {
                 }
             );
 
-            // Api call
+            // API call
             const response = await axios({
                 method: "POST",
                 url: `/api/v1/nfts`,
@@ -85,19 +85,20 @@ export const StateContextProvider = ({ children }) => {
         
         // Listing price
         const listingPrice = await contract.call("listingPrice");
-        const allImages = images.map((images, i) => ({
-            owner: images.creator,
-            title: images.title,
-            description: images.description,
-            email: images.email,
-            category: images.category,
-            fundraised: images.fundraised,
-            image: images.image,
-            imageID: images.id.toNumber(),
-            createdAt: images.timestamp.toNumber(),
+        const allImages = images.map((image, i) => ({
+            owner: image.creator,
+            title: image.title,
+            description: image.description,
+            email: image.email,
+            category: image.category,
+            fundraised: image.fundraised,
+            image: image.image,
+            imageID: image.id.toNumber(),
+            createdAt: image.timestamp.toNumber(),
             listedAmount: ethers.utils.formatEther(listingPrice.toString()),
             totalUpload: totalUpload.toNumber(),
-        }))
+            comments: image.comments
+        }));
 
         return allImages;
     };
@@ -112,19 +113,20 @@ export const StateContextProvider = ({ children }) => {
         
         // Listing price
         const listingPrice = await contract.call("listingPrice");
-        const allImages = images.map((images, i) => ({
-            owner: images.creator,
-            title: images.title,
-            description: images.description,
-            email: images.email,
-            category: images.category,
-            fundraised: images.fundraised,
-            image: images.image,
-            imageID: images.id.toNumber(),
-            createdAt: images.timestamp.toNumber(),
+        const allImages = images.map((image, i) => ({
+            owner: image.creator,
+            title: image.title,
+            description: image.description,
+            email: image.email,
+            category: image.category,
+            fundraised: image.fundraised,
+            image: image.image,
+            imageID: image.id.toNumber(),
+            createdAt: image.timestamp.toNumber(),
             listedAmount: ethers.utils.formatEther(listingPrice.toString()),
             totalUpload: totalUpload.toNumber(),
-        }))
+            comments: image.comments
+        }));
 
         return allImages;
     };
@@ -143,12 +145,13 @@ export const StateContextProvider = ({ children }) => {
                 imageURL: data[6],
                 createdAt: data[7].toNumber(),
                 imageId: data[8].toNumber(),
+                comments: data[9]
             };
 
             return image;
         } catch (error) {
             console.log(error);
-        };
+        }
     };
 
     // Donate
@@ -163,9 +166,20 @@ export const StateContextProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
-    //Get api data
+    // Add comment
+    const addComment = async ({ id, message }) => {
+        try {
+            const transaction = await contract.call("addComment", [id, address, message]);
+            console.log(transaction);
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    // Get api data
     const getAllNftsAPI = async () => {
         const response = await axios({
             method: "GET",
@@ -174,7 +188,7 @@ export const StateContextProvider = ({ children }) => {
         console.log(response);
     };
 
-    //Get by creator api data
+    // Get by creator api data
     const getNFTsByCreatorAPI = async (address) => {
         const response = await axios({
             method: "GET",
@@ -183,14 +197,38 @@ export const StateContextProvider = ({ children }) => {
         console.log(response.data);
     };
 
-    // Single NFTS api
+    // Single NFTs api
     const getSingleNftsAPI = async (id) =>  {
         const response = await axios({
             method: "GET",
             url: `/api/v1/nfts/${id}`,
         });
         console.log(response);
-    }
+    };
+
+    // Get all comments api
+    const getAllCommentsAPI = async (id) =>  {
+        const response = await axios({
+            method: "GET",
+            url: `/api/v1/nfts/comments`,
+        });
+        console.log(response);
+    };
+
+    // Post create comment api
+    const postCreateCommentsAPI = async ({nftID, commentor, content, image}) =>  {
+        const response = await axios({
+            method: "POST",
+            url: `/api/v1/nfts/comments`,
+            data: {
+                nftID: nftID,
+                commentor: commentor,
+                content: content,
+                image: image,
+            },
+        });
+        console.log(response);
+    };
 
     return (
         <StateContext.Provider 
@@ -209,13 +247,16 @@ export const StateContextProvider = ({ children }) => {
             donateFund,
             singleImage,
             getNFTsByCreator,
+            addComment,
             // API
             getAllNftsAPI,
             getNFTsByCreatorAPI,
             getSingleNftsAPI,
-         }}>{
-            children
-         }</StateContext.Provider>
+            getAllCommentsAPI,
+            postCreateCommentsAPI
+        }}>
+            {children}
+        </StateContext.Provider>
     );
 };
 

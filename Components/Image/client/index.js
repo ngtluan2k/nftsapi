@@ -25,6 +25,7 @@ export default {
   client8,
   client9,
   client10,
+  client11,
   client12,
   client13,
   client14,

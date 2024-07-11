@@ -63,7 +63,7 @@
 
 .textarea {
     height: 6rem;
-    resize: none;
+    /* resize: none; */
 }
 
 .category {

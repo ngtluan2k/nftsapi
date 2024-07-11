@@ -1,70 +1,93 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 // INTERNAL IMPORT
 import Style from "./Comment.module.css";
 import images from "../Image/client/index";
+import { useStateContext } from "../../Context/NFTs";
+import axios from "axios";
 
-const Comment = () => {
+const Comment = ({ image }) => {
+    const {
+        address,
+        addComment
+    } = useStateContext();
+    const [comment, setComment] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handlePostComment = async () => {
+        if (comment.trim() === "") return;
+        setLoading(true);
+        try {
+            const response = await axios.post(`/api/v1/comment/${image.imageId}`, {
+                nftID: image.imageId,
+                commenter: address,
+                message: comment,
+            });
+            console.log(response)
+            await addComment({ id: image.imageId, message: comment });
+            setComment("");
+        } catch (error) {
+            console.error("Failed to post comment:", error);
+        }
+        setLoading(false);
+    };
+
+    const handleCancel = () => {
+        setComment("");
+    };
+
+    const getClientImageIndex = (index) => {
+        return `client${(index % 11) + 1}`;
+    };
+
     return (
         <div className={Style.postcontainer}>
-            <div className={Style.postheader}>
-                <Image
-                    className={Style.profilepic}
-                    src={images.client1}
-                    width={80}
-                    height={80}
-                    onClick={() => setOpenProfile(true)}
-                />
-                <div className={Style.postinfo}>
-                    <h3>Adam</h3>
-                    <p>Shared publicly - Jan 2024</p>
+            {image.comments.map((comment, i) => (
+                <div key={i}>
+                    <div className={Style.postheader}>
+                        <Image
+                            className={Style.profilepic}
+                            src={images[getClientImageIndex(i)]}
+                            width={80}
+                            height={80}
+                            onClick={() => setOpenProfile(true)}
+                        />
+                        <div className={Style.postinfo}>
+                            <h3>{comment.commenter}</h3>
+                            <p>Commented publicly - {new Date(image.createdAt * 1000).toDateString()}</p>
+                        </div>
+                    </div>
+                    <div className={Style.postcontent}>
+                        <p>{comment.message}</p>
+                    </div>
+                    <div className={Style.postactions}>
+                        <p>Like</p>
+                        <p>Comment</p>
+                        <p>Share</p>
+                    </div>
                 </div>
-            </div>
-            <div className={Style.postcontent}>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
-                </p>
-            </div>
-            <div className={Style.postactions}>
-                <p>Like</p>
-                <p>Comment</p>
-                <p>Share</p>
-            </div>
-            <div className={Style.postheader}>
-                <Image
-                    className={Style.profilepic}
-                    src={images.client1}
-                    width={80}
-                    height={80}
-                    onClick={() => setOpenProfile(true)}
-                />
-                <div className={Style.postinfo}>
-                    <h3>Eva</h3>
-                    <p>Shared publicly - Jan 2024</p>
-                </div>
-            </div>
-            <div className={Style.postcontent}>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip consequat.
-                </p>
-            </div>
-            <div className={Style.postactions}>
-                <p>Like</p>
-                <p>Comment</p>
-                <p>Share</p>
-            </div>
+            ))}
             <div className={Style.commentsection}>
-                <Image
-                    className={Style.profilepic}
-                    src={images.client1}
-                    width={80}
-                    height={80}
-                    onClick={() => setOpenProfile(true)}
+                <textarea
+                    placeholder="Message"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
                 />
-                <textarea placeholder="Message"></textarea>
                 <div className={Style.commentbuttons}>
-                    <button className={Style.postbtn}>POST COMMENT</button>
-                    <button className={Style.cancelbtn}>CANCEL</button>
+                    <button
+                        className={Style.postbtn}
+                        onClick={handlePostComment}
+                        disabled={loading}
+                    >
+                        {loading ? "Posting..." : "POST COMMENT"}
+                    </button>
+                    <button
+                        className={Style.cancelbtn}
+                        onClick={handleCancel}
+                        disabled={loading}
+                    >
+                        CANCEL
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
+import { Helmet } from 'react-helmet';
 // INTERNAL IMPORT
 import {
   Card,
@@ -130,9 +131,12 @@ const Home = () => {
 
   return (
     <div className="home">
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
       <Header notification={notification} setNotification={setNotification} />
       <div className="header">
-        <h1>Create 1000 NFTs for free</h1>
+        <h1>Create free document sharing</h1>
       </div>
       {/* UPLOAD */}
       <div className="upload">

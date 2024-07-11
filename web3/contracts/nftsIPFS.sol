@@ -5,7 +5,7 @@ contract nftsIPFS {
     address payable contractOwner = payable(0x83d5205172B5C5afdB9b1B9119A19bB2D5D7b2A8);
     uint256 public listingPrice = 0.025 ether;
 
-    struct NFTs{
+    struct NFTs {
         string title;
         string description;
         string email;
@@ -15,20 +15,36 @@ contract nftsIPFS {
         string image;
         uint256 timestamp;
         uint256 id;
+        Comment[] comments;
+    }
+
+    struct Comment {
+        address commenter;
+        string message;
+        uint256 timestamp;
     }
 
     mapping(uint256 => NFTs) public nftImages;
     uint256 public imagesCount = 0;
 
-    function uploadIPFS(address _creator, string memory _image, string memory _title,
-    string memory _description, string memory _email, string memory _category) 
-    public payable returns(
-        string memory,
-        string memory,
-        string memory,
-        address,
-        string memory
-    ){
+    function uploadIPFS(
+        address _creator,
+        string memory _image,
+        string memory _title,
+        string memory _description,
+        string memory _email,
+        string memory _category
+    ) 
+        public 
+        payable 
+        returns(
+            string memory,
+            string memory,
+            string memory,
+            address,
+            string memory
+        ) 
+    {
         imagesCount++;
         NFTs storage nft = nftImages[imagesCount];
 
@@ -50,12 +66,12 @@ contract nftsIPFS {
         );
     }
 
-    function getAllNFTs() public view returns (NFTs[] memory){
+    function getAllNFTs() public view returns (NFTs[] memory) {
         uint256 itemCount = imagesCount;
         uint256 currentIndex = 0;
 
         NFTs[] memory items = new NFTs[](itemCount);
-        for (uint256 i = 0; i < itemCount; i++){
+        for (uint256 i = 0; i < itemCount; i++) {
             uint256 currentId = i + 1;
             NFTs storage currentItem = nftImages[currentId];
             items[currentIndex] = currentItem;
@@ -91,12 +107,13 @@ contract nftsIPFS {
         string memory,
         string memory,
         string memory,
-        uint256 ,
+        uint256,
         address,
         string memory,
-        uint256 ,
-        uint256 
-    ){
+        uint256,
+        uint256,
+        Comment[] memory
+    ) {
         NFTs memory nfts = nftImages[id];
         return(
             nfts.title,
@@ -107,7 +124,8 @@ contract nftsIPFS {
             nfts.creator,
             nfts.image,
             nfts.timestamp,
-            nfts.id
+            nfts.id,
+            nfts.comments
         );
     }
 
@@ -127,9 +145,20 @@ contract nftsIPFS {
         NFTs storage nft = nftImages[_id];
 
         (bool sent,) = payable(nft.creator).call{value: amount}("");
-        if(sent){
+        if (sent) {
             nft.fundraised = nft.fundraised + amount;
         }
+    }
+
+    // Add comment function
+    function addComment(uint256 _id, address _commenter, string memory _message) public {
+        NFTs storage nft = nftImages[_id];
+        Comment memory newComment = Comment({
+            commenter: _commenter,
+            message: _message,
+            timestamp: block.timestamp
+        });
+        nft.comments.push(newComment);
     }
 
     function withdraw(address _owner) external {
@@ -139,6 +168,4 @@ contract nftsIPFS {
 
         contractOwner.transfer(balance);
     }
-
-
 }

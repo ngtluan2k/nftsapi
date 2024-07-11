@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from 'react-helmet';
 import { Header, Footer, Notification, Loader, Card } from "../Components";
 import { useStateContext } from "../Context/NFTs";
 
@@ -27,6 +28,9 @@ const Profile = () => {
 
     return (
         <div className="home">
+            <Helmet>
+                <title>Profile</title>
+            </Helmet>
             <Header notification={notification} setNotification={setNotification} />
             <div className="content-profile">
                 {user && (

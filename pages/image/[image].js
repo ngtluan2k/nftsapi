@@ -69,7 +69,7 @@ const imageDetail = () => {
             image={image}
           />
           <h1>Comments</h1>
-          <Comment />
+          <Comment image={image} />
         </>
       )}
       

@@ -25,7 +25,7 @@
   
   .postinfo p {
     margin: 0;
-    color: #888;
+    color: wheat;
   }
   
   .postcontent {
@@ -39,7 +39,7 @@
   }
   
   .postactions p {
-    color: white; 
+    color: black; 
     cursor: pointer;
     margin-left: 10px;
   }
@@ -71,7 +71,7 @@
   }
   
   .postbtn, .cancelbtn {
-    background: #1d4ed8; 
+    background: linear-gradient(-45deg, #f89b29 0%, #ff0f7b 100%);
     color: #fff;
     border: none;
     padding: 10px;
