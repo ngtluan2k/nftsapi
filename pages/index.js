@@ -173,7 +173,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <h1 className="subheading">All NFTs of marketplace</h1>
+      <h1 className="subheading">All documents</h1>
       {/* CARD */}
       {allImages.length == 0 ? (
         <Loader />

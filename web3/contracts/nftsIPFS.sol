@@ -16,11 +16,18 @@ contract nftsIPFS {
         uint256 timestamp;
         uint256 id;
         Comment[] comments;
+        Donation[] donations;
     }
 
     struct Comment {
         address commenter;
         string message;
+        uint256 timestamp;
+    }
+
+    struct Donation {
+        address donor;
+        uint256 amount;
         uint256 timestamp;
     }
 
@@ -112,7 +119,8 @@ contract nftsIPFS {
         string memory,
         uint256,
         uint256,
-        Comment[] memory
+        Comment[] memory,
+        Donation[] memory
     ) {
         NFTs memory nfts = nftImages[id];
         return(
@@ -125,7 +133,8 @@ contract nftsIPFS {
             nfts.image,
             nfts.timestamp,
             nfts.id,
-            nfts.comments
+            nfts.comments,
+            nfts.donations
         );
     }
 
@@ -139,7 +148,7 @@ contract nftsIPFS {
     }
 
     // Donate function
-    function donateToImage(uint256 _id) public payable {
+    function donateToImage(uint256 _id, address _donor) public payable {
         uint256 amount = msg.value;
 
         NFTs storage nft = nftImages[_id];
@@ -147,6 +156,12 @@ contract nftsIPFS {
         (bool sent,) = payable(nft.creator).call{value: amount}("");
         if (sent) {
             nft.fundraised = nft.fundraised + amount;
+            Donation memory newDonation = Donation({
+                donor: _donor,
+                amount: amount,
+                timestamp: block.timestamp
+            });
+            nft.donations.push(newDonation);
         }
     }
 

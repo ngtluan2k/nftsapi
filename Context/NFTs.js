@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-    const { contract } = useContract("0x65da3e782DC5C4Ae4AC7BFD26F740BE8D41D264b");
+    const { contract } = useContract("0x829A51cD621B197e242c131a360Da06092E18a35");
     const address = useAddress();
     const connect = useMetamask();
 
@@ -125,7 +125,8 @@ export const StateContextProvider = ({ children }) => {
             createdAt: image.timestamp.toNumber(),
             listedAmount: ethers.utils.formatEther(listingPrice.toString()),
             totalUpload: totalUpload.toNumber(),
-            comments: image.comments
+            comments: image.comments,
+            donations: image.donations
         }));
 
         return allImages;
@@ -145,7 +146,8 @@ export const StateContextProvider = ({ children }) => {
                 imageURL: data[6],
                 createdAt: data[7].toNumber(),
                 imageId: data[8].toNumber(),
-                comments: data[9]
+                comments: data[9],
+                donations: data[10]
             };
 
             return image;
@@ -157,9 +159,9 @@ export const StateContextProvider = ({ children }) => {
     // Donate
     const donateFund = async ({ amount, Id }) => {
         try {
-            console.log(amount, Id);
-            const transaction = await contract.call("donateToImage", [Id], {
-                value: amount.toString(),
+            console.log(amount, Id, address);
+            const transaction = await contract.call("donateToImage", [Id, address], {
+                value: amount.toString()
             });
             console.log(transaction);
             window.location.reload();

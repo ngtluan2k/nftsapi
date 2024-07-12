@@ -64,7 +64,7 @@ const Header = ({ notification, setNotification }) => {
           ))}
           {token ? (
             <div>
-              <a href="/profile">
+              <a className={Style.linkuser} href="/profile">
                 <p>Hello, {user.name}</p>
               </a>
               <p onClick={() => logout()}>Logout</p>

@@ -54,15 +54,15 @@ const Filter = (
 
   const filter = [
     {
-      name: "Old Images",
+      name: "Old Files",
     },
     {
-      name: "Recent Images",
+      name: "Recent Files",
     },
   ];
 
   useEffect(() => {
-    if (activeSelect == "Old Images") {
+    if (activeSelect == "Old Files") {
       setAllImages(oldImages);
     } else {
       setAllImages(oldImages.reverse());

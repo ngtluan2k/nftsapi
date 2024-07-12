@@ -43,7 +43,7 @@ const Card = ({ setNotification, image, index }) => {
           CreatedAt: {new Date(image.createdAt * 1000).toDateString()}
           <small className={Style.number}>#{image.imageID}</small>
         </span>
-        <small className={Style.para}>{image.description.slice(0, 80)}...</small>
+        <small className={Style.para}>{image.title.slice(0, 80)}...</small>
         <button
           onClick={() => (
             setNotification("Image URL is successfully copied"),

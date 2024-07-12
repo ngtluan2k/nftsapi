@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from 'react-helmet';
-import { Header, Footer, Notification, Loader, Card } from "../Components";
+import { Header, Footer, Notification, Loader, Card2 } from "../Components";
 import { useStateContext } from "../Context/NFTs";
 
 const Profile = () => {
@@ -12,6 +12,7 @@ const Profile = () => {
     const fetchImages = async () => {
         const images = await getNFTsByCreator(address);
         setAllImages(images);
+        console.log(images);
 
         // API NFTs
         const apiImages = await getNFTsByCreatorAPI();
@@ -32,6 +33,7 @@ const Profile = () => {
                 <title>Profile</title>
             </Helmet>
             <Header notification={notification} setNotification={setNotification} />
+            <h1>PROFILE</h1>
             <div className="content-profile">
                 {user && (
                     <div className="info-profile">
@@ -47,7 +49,7 @@ const Profile = () => {
                         <h1>No images</h1>
                     ) : (
                         allImages.map((image, i) => (
-                            <Card key={i + 1} index={i} image={image} setNotification={setNotification} />
+                            <Card2 key={i + 1} index={i} image={image} setNotification={setNotification} />
                         ))
                     )}
                 </div>

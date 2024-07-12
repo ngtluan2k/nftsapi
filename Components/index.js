@@ -15,8 +15,10 @@ import SignUp from "./SignUp/SignUp";
 import Product from "./Product/Product";
 import Donate from "./Donate/Donate";
 import Comment from "./Comment/comment";
+import Card2 from "./Item/Card";
 export {
   Card,
+  Card2,
   Upload,
   Button,
   Profile,

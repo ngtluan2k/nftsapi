@@ -5,7 +5,6 @@ import { saveAs } from "file-saver";
 // INTERNAL IMPORT
 import Style from "./Product.module.css";
 import BTNStyle from "../Button/Button.module.css";
-import images from "../Image/index";
 import client from "../Image/client/index";
 import { Donate } from "../index";
 
@@ -31,7 +30,6 @@ const Product = ({
       <div className={Style.detail}>
         <div className={Style.detail_box}>
           <h1>{image?.title}</h1>
-          <p>{image?.description}</p>
           <p className={Style.info}>
             <span>Category: {image?.category}</span> {""}{" "}
             <span>Image ID: #{image?.imageId}</span> {""}{" "}
@@ -45,15 +43,17 @@ const Product = ({
           </p>
           <p>Contact creator: {image?.email}</p>
           <span class={Style.para}>
-            <Image alt="image-2" className="avatar_img" src={client[`client${1}`]} width={40} height={40} />
+            <Image alt="image-2" className="avatar_img" src={client[`client${image.imageId}`]} width={40} height={40} />
             <small
               className={Style.para_small}
               onClick={() => (
                 setNotification("Successfully copied"),
                 navigator.clipboard.writeText(image?.creator)
               )}
-            >{image?.creator.slice(0, 30)}...</small>
+            >{image?.creator}</small>
           </span>
+          <h3>Description:</h3>
+          <p>{image?.description}</p>
         </div>
         <button onClick={() => (
           setNotification("Image URL is successfully copied"),

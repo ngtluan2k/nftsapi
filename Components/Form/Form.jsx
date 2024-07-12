@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // INTERNAL IMPORT
 import { FormSVG, Lock } from "../SVG/index";
 import Style from "./Form.module.css";
@@ -11,7 +11,19 @@ const Form = ({
   handleSubmit,
   setCategory,
 }) => {
-  const categories = ["Nature", "Artificial", "AI", "Technology", "Social", "Media",];
+  const categories = ["Nature", "Artificial", "AI", "Technology", "Social", "Media"];
+
+  const [showInput, setShowInput] = useState(false);
+
+  const handleCategoryChange = (category) => {
+    setShowInput(false);
+    setCategory(category);
+  };
+
+  const handleShowInput = () => {
+    setShowInput(true);
+    setCategory("");
+  };
 
   return (
     <div className={Style.card}>
@@ -48,13 +60,30 @@ const Form = ({
           </div>
           <p className={Style.second}>Category</p>
           <div className={Style.category}>
-            {categories.map((category) => (
-              <CheckBox
-                setCategory={setCategory}
-                key={category}
-                category={category}
-              />
-            ))}
+            {showInput ? (
+              <div className={Style.field}>
+                <input
+                  type="text"
+                  className={Style.input_field}
+                  placeholder="Enter category"
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </div>
+            ) : (
+              categories.map((category) => (
+                <CheckBox
+                  key={category}
+                  category={category}
+                  isSelected={false}
+                  setCategory={setCategory}
+                />
+              ))
+            )}
+            {!showInput && (
+              <div className={Style.clickHere} onClick={handleShowInput}>
+                Click here to add a new category
+              </div>
+            )}
           </div>
           <div className={Style.btn}>
             <button className={Style.button1} onClick={() => (setFile(null), setDisplay(null))}>
