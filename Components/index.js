@@ -16,6 +16,9 @@ import Product from "./Product/Product";
 import Donate from "./Donate/Donate";
 import Comment from "./Comment/comment";
 import Card2 from "./Item/Card";
+import Slidebar from "./Admin/Slidebar/Slidebar";
+import Listview from "./Admin/Listview/Listview";
+import HeaderAdmin from "./Admin/Header/Header";
 export {
   Card,
   Card2,
@@ -35,4 +38,7 @@ export {
   Product,
   Donate,
   Comment,
+  HeaderAdmin,
+  Slidebar,
+  Listview
 };

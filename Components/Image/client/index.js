@@ -1,3 +1,4 @@
+import client0 from "./document.png";
 import client1 from "./client-1.png";
 import client2 from "./client-2.png";
 import client3 from "./client-3.png";
@@ -15,6 +16,7 @@ import client14 from "./client-14.png";
 import client15 from "./client-15.png";
 
 export default {
+  client0,
   client1,
   client2,
   client3,

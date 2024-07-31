@@ -52,7 +52,12 @@ const Login = ({
         };
         localStorage.setItem("NFTApi User", JSON.stringify(userData));
         setLogin(false);
-        window.location.reload();
+        console.log(response.data.data.user);
+        if (response.data.data.user.role == "admin"){
+          window.location.href = "/dashboard"
+        } else {
+          window.location.reload();
+        }
       } else {
         setNotification("Something went wrong, try again later")
       }

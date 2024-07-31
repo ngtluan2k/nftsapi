@@ -15,15 +15,9 @@ contract nftsIPFS {
         string image;
         uint256 timestamp;
         uint256 id;
-        Comment[] comments;
         Donation[] donations;
     }
 
-    struct Comment {
-        address commenter;
-        string message;
-        uint256 timestamp;
-    }
 
     struct Donation {
         address donor;
@@ -119,7 +113,6 @@ contract nftsIPFS {
         string memory,
         uint256,
         uint256,
-        Comment[] memory,
         Donation[] memory
     ) {
         NFTs memory nfts = nftImages[id];
@@ -133,7 +126,6 @@ contract nftsIPFS {
             nfts.image,
             nfts.timestamp,
             nfts.id,
-            nfts.comments,
             nfts.donations
         );
     }
@@ -165,16 +157,6 @@ contract nftsIPFS {
         }
     }
 
-    // Add comment function
-    function addComment(uint256 _id, address _commenter, string memory _message) public {
-        NFTs storage nft = nftImages[_id];
-        Comment memory newComment = Comment({
-            commenter: _commenter,
-            message: _message,
-            timestamp: block.timestamp
-        });
-        nft.comments.push(newComment);
-    }
 
     function withdraw(address _owner) external {
         require(_owner == contractOwner, "Only owner can withdraw");

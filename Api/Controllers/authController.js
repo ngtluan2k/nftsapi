@@ -1,5 +1,61 @@
 const User = require("../Model/userModel");
+const NFT = require("../Model/nftModel");
+
 const jwt = require("jsonwebtoken");
+
+exports.getAllusers = async (req, res, next) => {
+    try {
+        const users = await User.find();
+        const usersWithNFTCount = [];
+
+        for (const user of users) {
+            const nftCount = await NFT.countDocuments({ address: user.address });
+            usersWithNFTCount.push({
+                ...user.toObject(),
+                nftCount, // Thêm số lượng NFT vào đối tượng người dùng
+            });
+        }
+
+        // Gửi phản hồi
+        res.status(200).json({
+            status: "success",
+            results: usersWithNFTCount.length,
+            data: {
+                users: usersWithNFTCount,
+            },
+        });
+    } catch (error) {
+        next(error); // Xử lý lỗi
+    }
+};
+
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findByIdAndDelete(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                status: "fail",
+                message: "User not found",
+            });
+        }
+
+        const users = await User.find(); // Lấy danh sách user mới sau khi xóa
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                users
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            message: error.message,
+        });
+    }
+};
 
 const signToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {

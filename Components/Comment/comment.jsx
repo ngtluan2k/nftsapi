@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 // INTERNAL IMPORT
 import Style from "./Comment.module.css";
@@ -7,12 +7,25 @@ import { useStateContext } from "../../Context/NFTs";
 import axios from "axios";
 
 const Comment = ({ image }) => {
-    const {
-        address,
-        addComment
-    } = useStateContext();
+    const { address } = useStateContext();
     const [comment, setComment] = useState("");
     const [loading, setLoading] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const response = await axios.get(`/api/v1/comment/${image.imageId}`);
+                setComments(response.data.data.comments);
+            } catch (err) {
+                console.error("Failed to load comments:", err);
+                setError("Failed to load comments");
+            }
+        };
+
+        fetchComments();
+    }, [image.imageId]);
 
     const handlePostComment = async () => {
         if (comment.trim() === "") return;
@@ -23,8 +36,7 @@ const Comment = ({ image }) => {
                 commenter: address,
                 message: comment,
             });
-            console.log(response)
-            await addComment({ id: image.imageId, message: comment });
+            setComments(prevComments => [...prevComments, response.data.data.comment]);
             setComment("");
         } catch (error) {
             console.error("Failed to post comment:", error);
@@ -42,7 +54,8 @@ const Comment = ({ image }) => {
 
     return (
         <div className={Style.postcontainer}>
-            {image.comments.map((comment, i) => (
+            {error && <p className={Style.error}>{error}</p>} {/* Display error if any */}
+            {comments.map((comment, i) => (
                 <div key={i}>
                     <div className={Style.postheader}>
                         <Image
@@ -54,7 +67,7 @@ const Comment = ({ image }) => {
                         />
                         <div className={Style.postinfo}>
                             <h3>{comment.commenter}</h3>
-                            <p>Commented publicly - {new Date(image.createdAt * 1000).toDateString()}</p>
+                            <p>Commented publicly - {new Date(comment.createdAt * 1000).toDateString()}</p>
                         </div>
                     </div>
                     <div className={Style.postcontent}>

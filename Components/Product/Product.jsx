@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { saveAs } from "file-saver";
 
@@ -21,11 +21,35 @@ const Product = ({
   };
 
   const [donate, setDonate] = useState(false);
+  const [fileType, setFileType] = useState("");
+
+  useEffect(() => {
+    const checkFileType = async () => {
+      try {
+        const response = await fetch(image.image);
+        const contentType = response.headers.get("Content-Type");
+        setFileType(contentType);
+      } catch (error) {
+        console.error("Error fetching file type:", error);
+      }
+    };
+
+    checkFileType();
+  }, [image.image]);
 
   return (
     <div className={Style.Product}>
       <div className={Style.image}>
-        <img className={Style.image_img} src={image?.imageURL} alt="image" />
+        
+        {fileType === "image/png" || fileType === "image/jpg" || fileType === "image/jpeg" ? (
+              <img className={Style.image_img} src={image?.imageURL} alt="image" />
+            ) : (
+              <Image
+                className={Style.image_img}
+                src={client[`client0`]}
+                alt="image"
+              />
+            )}
       </div>
       <div className={Style.detail}>
         <div className={Style.detail_box}>

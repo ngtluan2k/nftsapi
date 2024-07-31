@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
-    const { contract } = useContract("0x829A51cD621B197e242c131a360Da06092E18a35");
+    const { contract } = useContract("0xe017DC0A10140C45d9911E4975c5EDF44C112bA1");
     const address = useAddress();
     const connect = useMetamask();
 
@@ -255,7 +255,7 @@ export const StateContextProvider = ({ children }) => {
             getNFTsByCreatorAPI,
             getSingleNftsAPI,
             getAllCommentsAPI,
-            postCreateCommentsAPI
+            postCreateCommentsAPI,
         }}>
             {children}
         </StateContext.Provider>
